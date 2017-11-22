@@ -7,7 +7,7 @@ var historyFallback = require('connect-history-api-fallback');
 var proxyMiddleware = require('http-proxy-middleware');
 
 var options = global.gulpOptions,
-    SERVE_DIST = options.SERVE_DIST,
+    DIST = options.DIST,
     SRC = options.SRC;
 
 // Static Server + watching build and live reload accross all the browsers
@@ -32,7 +32,7 @@ gulp.task('browsersync', ['build'], function() {
   ];
 
   var browserSyncConfig = {
-    baseDir: SERVE_DIST + '/',
+    baseDir: DIST + '/',
     middleware: middleware,
     ghostMode: false
   };

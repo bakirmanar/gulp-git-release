@@ -37,13 +37,12 @@ global.gulpOptions = {
 
     GIT_REPO_URL: 'bakirmanar/gulp-git-release',
     GIT_USER: 'bakirmanar',
-    NEW_TAG: 'v0.0.1',
-    LAST_TAG: '',
-    BUILD_DIST: './build',
+    NEW_TAG: 'v0.0.2',
+    LAST_TAG: 'v0.0.1',
+    ZIP_NAME: "build",
 
     SRC: './src',
     DIST: './dist',
-    SERVE_DIST: './dist',
     LIBS_JS: [
         './node_modules/jquery/dist/jquery.min.js',
         './node_modules/angular/angular.js',

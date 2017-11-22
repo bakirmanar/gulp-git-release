@@ -60,5 +60,9 @@
   "devDependencies": {
     "browser-sync": "^2.18.13",
     "gulp-watch": "^4.3.11"
-  }
+  },
+  "scripts": {
+    "pretest": "silenium standalone start",
+    "postinstall": ""
+  },
 }
