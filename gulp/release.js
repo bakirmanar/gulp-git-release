@@ -12,7 +12,7 @@ var NEW_TAG = options.NEW_TAG;
 var LAST_TAG = options.LAST_TAG;
 var DIST = options.DIST;
 var ZIP_NAME = options.ZIP_NAME;
-var TOKEN = require('../key.json').access_token;
+var TOKEN = require('../key/key.json').access_token;
 
 gulp.task('release', ['createRelease', 'zipBuild']);
 
