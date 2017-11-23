@@ -40,6 +40,9 @@ global.gulpOptions = {
     NEW_TAG: 'v0.0.2',
     LAST_TAG: 'v0.0.1',
     ZIP_NAME: "build",
+    TARGET: "master",
+    IS_DRAFT: true,
+    IS_PRERELEASE: true,
 
     SRC: './src',
     DIST: './dist',

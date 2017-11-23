@@ -12,6 +12,10 @@ var NEW_TAG = options.NEW_TAG;
 var LAST_TAG = options.LAST_TAG;
 var DIST = options.DIST;
 var ZIP_NAME = options.ZIP_NAME;
+var IS_DRAFT = options.IS_DRAFT;
+var IS_PRERELEASE = options.IS_PRERELEASE;
+var TARGET = options.TARGET;
+var zipName = ZIP_NAME + '_' + NEW_TAG + '.zip';
 var TOKEN = require('../key/key.json').access_token;
 
 gulp.task('release', ['createRelease', 'zipBuild']);
@@ -46,7 +50,6 @@ gulp.task('createRelease', function () {
 
     //getting date of latest pre-release
     function getLastDate(lastTagSha) {
-        console.log(lastTagSha);
         request({
             url: GIT_API + GIT_REPO_URL + '/commits/' + lastTagSha,
             method: 'GET',
@@ -97,8 +100,9 @@ gulp.task('createRelease', function () {
             tag_name: NEW_TAG,
             name: NEW_TAG,
             body: description || "Release commit",
-            draft: true,
-            prerelease: true
+            draft: IS_DRAFT,
+            prerelease: IS_PRERELEASE,
+            target_commitish: TARGET
         };
         request({
             url: GIT_API + GIT_REPO_URL + '/releases?access_token=' + TOKEN,
@@ -112,14 +116,35 @@ gulp.task('createRelease', function () {
             if (error) {
                 console.log(error);
             } else {
-
                 var bodyObj = JSON.parse(body);
                 console.log(bodyObj);
-                /*var uploadUrl = bodyObj.upload_url.replace('{?name,label}', '');*/
-
-                /*uploadAsset (uploadUrl);*/
+                var uploadUrl = bodyObj.upload_url.replace('{?name,label}', '');
+                uploadAsset(uploadUrl);
             }
         });
+    }
+
+    // upload build zip to release assets
+    function uploadAsset(uploadUrl) {
+        fs.readFile('./' + zipName, function (err, data) {
+            if (err) throw err;
+            request({
+                url: uploadUrl + '?name=' + zipName +'&access_token=' + TOKEN,
+                method: 'POST',
+                headers: {
+                    'User-Agent': GIT_USER,
+                    'Content-Type': 'application/zip'
+                },
+                body: data
+            }, function (error, response, body) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('asset uploaded');
+                }
+            });
+        });
+
     }
 
     function changeConfigVersion() {
@@ -137,8 +162,7 @@ gulp.task('createRelease', function () {
 });
 
 gulp.task('zipBuild', function () {
-
-    var output = fs.createWriteStream(ZIP_NAME + '_' + NEW_TAG + '.zip');
+    var output = fs.createWriteStream(zipName);
 
     output.on('close', function () {
         console.log(archive.pointer() + ' total bytes');
@@ -150,9 +174,6 @@ gulp.task('zipBuild', function () {
     });
 
     archive.pipe(output);
-
     archive.directory(DIST, '');
-
     archive.finalize();
-
 });
