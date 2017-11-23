@@ -1,0 +1,3 @@
+function someFoo() {
+    return "superfoo";
+}
